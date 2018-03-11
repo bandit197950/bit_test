@@ -5,7 +5,7 @@
 			unset($_SESSION['first_name']);
 			unset($_SESSION['last_name']);
 
-            session_write_close();
+            		session_write_close();
 			self::ChangeLocation('login');			
 		}
 		
