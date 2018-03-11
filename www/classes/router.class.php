@@ -38,7 +38,7 @@
 					$controller_info['function'] = (isset($path_parts[0])) ? $path_parts[0] : 'index';
 					break;
 				}
-				
+				session_write_close();
 				die('no such controller');				
 			}
 			
@@ -54,7 +54,8 @@
 				if(method_exists($controller, $controller_info['function'])) {
 					call_user_func(array($controller, $controller_info['function']));
 				}
-				else{
+				else {
+				    session_write_close();
 					die("method doesn't excists");
 				}
 			}

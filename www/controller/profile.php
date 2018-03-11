@@ -1,6 +1,8 @@
 <?php
 	class Controller_profile extends Controller {
 		public function Index() {
+		    session_write_close();
+
 		    $user_id         = $_SESSION['id'];
 		    $errors          = isset($_SESSION['errors']) ? $_SESSION['errors'] : [];
 		    unset($_SESSION['errors']);
@@ -71,6 +73,7 @@
             }
             if(!empty($this->Error))
                 $_SESSION['errors'] = $this->Error;
+            session_write_close();
             self::ChangeLocation('profile');
         }
 

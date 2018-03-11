@@ -20,6 +20,6 @@
     }
     catch(Exception $e) {
         include "lib/error.php";
+        session_write_close();
         ShowException($e);
     }
-    session_write_close();

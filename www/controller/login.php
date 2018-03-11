@@ -5,6 +5,7 @@
 			unset($_SESSION['first_name']);
 			unset($_SESSION['last_name']);
 
+            session_write_close();
 			self::ChangeLocation('login');			
 		}
 		
@@ -22,6 +23,8 @@
 						$_SESSION['id']         = $user['id'];
 						$_SESSION['first_name'] = $user['first_name'];
 						$_SESSION['last_name']  = $user['last_name'];
+
+						session_write_close();
 						self::ChangeLocation('profile');
 					}
 					else {
