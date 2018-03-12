@@ -71,7 +71,7 @@ class MySQLDb {
                 $this->ThrowErr("Start transaction failed");
             }
         }
-        else if(!mysqli_begin_transaction($this->LinkId, MYSQLI_TRANS_START_READ_ONLY)) {
+        else if(!mysqli_begin_transaction($this->LinkId, MYSQLI_TRANS_START_READ_WRITE)) {
             $this->ThrowErr("Start transaction failed");
             $ok = false;
         }
