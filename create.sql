@@ -3,19 +3,21 @@ CREATE DATABASE bit_test CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE bit_test;
 
 CREATE TABLE IF NOT EXISTS users(
-	id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	first_name varchar(256)   NOT NULL,
-	last_name  varchar(32)    NOT NULL,
+    id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    first_name varchar(256)   NOT NULL,
+    last_name  varchar(32)    NOT NULL,
     email      varchar(255)   NOT NULL,
-	password   varchar(128)   NOT NULL,
+    password   varchar(128)   NOT NULL,
     balance    decimal(10, 2) NOT NULL)
-	COMMENT="Users";
+    ENGINE=InnoDB
+    COMMENT="Users";
 
 CREATE TABLE IF NOT EXISTS balance_history(
     id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id int(11) NOT NULL,
     balance_before decimal(10, 2) NOT NULL,
     write_off_amount decimal(10, 2) NOT NULL)
+    ENGINE=InnoDB
     COMMENT="Balance history";
 
 CREATE INDEX balance_history_user_id ON balance_history(user_id);
