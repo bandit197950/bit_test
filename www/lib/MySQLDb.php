@@ -69,6 +69,7 @@ class MySQLDb {
         if(!$this->SupportReadWriteTransaction()) {
             if(!mysqli_autocommit($this->LinkId, false)) {
                 $this->ThrowErr("Start transaction failed");
+                $ok = false;
             }
         }
         else if(!mysqli_begin_transaction($this->LinkId, MYSQLI_TRANS_START_READ_WRITE)) {
