@@ -7,10 +7,18 @@
 		    $errors          = isset($_SESSION['errors']) ? $_SESSION['errors'] : [];
 		    unset($_SESSION['errors']);
 			$user_model      = Controller::LoadModel("user");
-			$user_info       = $user_model->GetUserInfo($user_id);
 			$history_model   = Controller::LoadModel("balance_history");
-			$balance_history = $history_model->GetHistory($user_id);
 			
+			$db = Main::GetDB();
+			try {
+				$db->BeginTransaction();
+				$user_info       = $user_model->GetUserInfo($user_id);
+				$balance_history = $history_model->GetHistory($user_id);
+				$db->CommitTransaction();
+			}
+			catch(Exception $e) {
+				$db->RollbackTransaction();
+			}
 			$header_view  = new View("header");
 			$profile_view = new View("profile");
 			$footer_view  = new View("footer");
@@ -45,38 +53,37 @@
 			$db = Main::GetDB();
 			try {
 				$wr_off_amt     = round(floatval($_REQUEST['write_off_amount']), 2);
-				$balance_before = $user_info['balance'];
 				$db->BeginTransaction();
 				$this->Validate();
 				if(empty($this->Error)) {
 					$user_info = $user_model->GetUserInfo($user_id);
+					$balance_before = $user_info['balance'];
 					if(!$user_model->WriteOffAmount($user_id, $wr_off_amt)) {
 					    $this->Error[] = $user_model->GetLastError();
 					    $db->RollbackTransaction();
 					}
 					else {
 					    if(!$history_model->WriteHistory($user_id, $balance_before, $wr_off_amt)) {
-						$this->Error[] = $history_model->GetLastError();
-						$db->RollbackTransaction();
+							$this->Error[] = $history_model->GetLastError();
+							$db->RollbackTransaction();
 					    }
 					    else {
-						$db->CommitTransaction();
-						$ok = true;
+							$db->CommitTransaction();
+							$ok = true;
 					    }
 					}
 				}
 				else {
 					$db->RollbackTransaction();
 				}
-			    }
-			    catch(Exception $e) {
+			}
+			catch(Exception $e) {
 				$db->RollbackTransaction();
 				$this->Error[] = $e;
-			    }
 			}
-		    }
-		    if(!empty($this->Error))
-			$_SESSION['errors'] = $this->Error;
+		    if(!empty($this->Error)) {
+				$_SESSION['errors'] = $this->Error;
+			}
 		    session_write_close();
 		    self::ChangeLocation('profile');
 		}
