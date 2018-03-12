@@ -48,39 +48,37 @@
 		    unset($_SESSION['errors']);
 
 		    if(isset($user_id)) {
-			$user_model    = Controller::LoadModel("user");
-			$history_model = Controller::LoadModel("balance_history");
-			$db = Main::GetDB();
-			try {
-				$wr_off_amt     = round(floatval($_REQUEST['write_off_amount']), 2);
-				$db->BeginTransaction();
-				$this->Validate();
-				if(empty($this->Error)) {
-					$user_info = $user_model->GetUserInfo($user_id);
-					$balance_before = $user_info['balance'];
-					if(!$user_model->WriteOffAmount($user_id, $wr_off_amt)) {
-					    $this->Error[] = $user_model->GetLastError();
-					    $db->RollbackTransaction();
-					}
-					else {
-					    if(!$history_model->WriteHistory($user_id, $balance_before, $wr_off_amt)) {
-							$this->Error[] = $history_model->GetLastError();
-							$db->RollbackTransaction();
-					    }
-					    else {
-							$db->CommitTransaction();
-							$ok = true;
-					    }
-					}
-				}
-				else {
-					$db->RollbackTransaction();
-				}
-			}
-			catch(Exception $e) {
-				$db->RollbackTransaction();
-				$this->Error[] = $e;
-			}
+                $user_model = Controller::LoadModel("user");
+                $history_model = Controller::LoadModel("balance_history");
+                $db = Main::GetDB();
+                try {
+                    $wr_off_amt = round(floatval($_REQUEST['write_off_amount']), 2);
+                    $db->BeginTransaction();
+                    $this->Validate();
+                    if(empty($this->Error)) {
+                        $user_info = $user_model->GetUserInfo($user_id);
+                        $balance_before = $user_info['balance'];
+                        if(!$user_model->WriteOffAmount($user_id, $wr_off_amt)) {
+                            $this->Error[] = $user_model->GetLastError();
+                            $db->RollbackTransaction();
+                        }
+                        else {
+                            if (!$history_model->WriteHistory($user_id, $balance_before, $wr_off_amt)) {
+                                $this->Error[] = $history_model->GetLastError();
+                                $db->RollbackTransaction();
+                            } else {
+                                $db->CommitTransaction();
+                                $ok = true;
+                            }
+                        }
+                    } else {
+                        $db->RollbackTransaction();
+                    }
+                } catch (Exception $e) {
+                    $db->RollbackTransaction();
+                    $this->Error[] = $e;
+                }
+            }
 		    if(!empty($this->Error)) {
 				$_SESSION['errors'] = $this->Error;
 			}

@@ -41,7 +41,7 @@ class MySQLDb {
                 mysqli_query($this->LinkId, "set character_set_client='utf8'");
                 mysqli_query($this->LinkId, "set character_set_results='utf8'");
                 mysqli_query($this->LinkId, "set collation_connection='utf8_general_ci'");
-                $mysqli->query("SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE");
+                mysqli_query($this->LinkId, "SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ");
                 $this->InnodbVersion = $this->QueryFirst("select variable_value
                                                                from information_schema.global_variables
                                                                where variable_name = 'innodb_version';");
