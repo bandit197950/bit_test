@@ -5,18 +5,20 @@ namespace bit_test\www\Controller;
 use bit_test\www\classes\Controller;
 use bit_test\www\classes\View;
 use bit_test\www\classes\Main;
-use bit_test\www\conf\config;
+use bit_test\www\model\User;
+use bit_test\www\model\BalanceHistory;
 
 class Profile extends Controller
 {
     public function Index()
     {
         session_start();
+        $errors = isset($_SESSION['errors']) ? $_SESSION['errors'] : [];
+        unset($_SESSION['errors']);
         session_write_close();
 
         $user_id = $_SESSION['id'];
-        $errors = isset($_SESSION['errors']) ? $_SESSION['errors'] : [];
-        unset($_SESSION['errors']);
+
         $user_model = Controller::LoadModel("User");
         $history_model = Controller::LoadModel("BalanceHistory");
 
@@ -62,23 +64,26 @@ class Profile extends Controller
         session_write_close();
 
         if (isset($user_id)) {
+            /** @var User $user_model */
             $user_model = Controller::LoadModel("User");
+            /** @var BalanceHistory $history_model */
             $history_model = Controller::LoadModel("BalanceHistory");
             $db = Main::GetDB();
             try {
                 $wr_off_amt = round(floatval($_POST['write_off_amount']), 2);
                 $db->BeginTransaction();
                 $user_info = $user_model->GetUserInfo($user_id);
+                if (!$user_info) {
+                    throw new \Exception($user_model->GetLastError());
+                }
                 $this->Validate($user_info['balance'], $wr_off_amt);
                 if (empty($this->Error)) {
                     $balance_before = $user_info['balance'];
                     if (!$user_model->WriteOffAmount($user_info, $wr_off_amt)) {
-                        $this->Error[] = $user_model->GetLastError();
-                        $db->RollbackTransaction();
+                        throw new \Exception($user_model->GetLastError());
                     } else {
                         if (!$history_model->WriteHistory($user_id, $balance_before, $wr_off_amt)) {
-                            $this->Error[] = $history_model->GetLastError();
-                            $db->RollbackTransaction();
+                            throw new \Exception($history_model->GetLastError());
                         } else {
                             $db->CommitTransaction();
                         }

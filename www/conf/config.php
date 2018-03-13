@@ -2,6 +2,14 @@
 
 namespace bit_test\www\conf;
 
+/**
+ * @method static Config db_host()
+ * @method static Config db_name()
+ * @method static Config db_login()
+ * @method static Config db_pwd()
+ * @method static Config include_dir()
+ * @method static Config doc_path()
+ */
 final class Config
 {
     private static $conf = [
@@ -16,7 +24,7 @@ final class Config
     public static function __callStatic($name, $arguments)
     {
         $ret = null;
-        if(isset(self::$conf[$name])) {
+        if (isset(self::$conf[$name])) {
             $ret = self::$conf[$name];
         }
         return $ret;

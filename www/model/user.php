@@ -4,7 +4,6 @@ namespace bit_test\www\model;
 
 use bit_test\www\classes\Model;
 use bit_test\www\classes\Main;
-use bit_test\www\conf\Config;
 
 class User extends Model
 {
@@ -24,7 +23,7 @@ class User extends Model
     {
         $ok = true;
         if ($user) {
-            $balance = bcadd($user['balance'], -$amount, 2 );
+            $balance = bcadd($user['balance'], -$amount, 2);
             if (bccomp($balance, '0.00', 2) >= 0) {
                 $user['balance'] = $balance;
                 $r = $this->Db->QueryUpdate("users", $user, "`id`=" . (int)$user['id']);

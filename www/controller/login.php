@@ -85,7 +85,8 @@ class Login extends Controller
     //
     // May be problem if connection is poor
     //
-    private function RegenerateSessionId() {
+    private function RegenerateSessionId()
+    {
         $_SESSION['destroyed'] = time();
         session_regenerate_id();
         unset($_SESSION['destroyed']);

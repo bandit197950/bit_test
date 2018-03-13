@@ -48,7 +48,8 @@ final class Utils
     { ?>
         <table style="border:2px solid #777" cellpadding="5px;" cellspacing="0px;">
             <tr>
-                <th colspan=2 style="background-color:red; color:white; font-weight:bold; font-size:22px;">Exception Info
+                <th colspan=2 style="background-color:red; color:white; font-weight:bold; font-size:22px;">Exception
+                    Info
                 </th>
             </tr>
             <tr>

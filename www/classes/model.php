@@ -2,8 +2,11 @@
 
 namespace bit_test\www\classes;
 
+use bit_test\www\lib\Db;
+
 abstract class Model extends Strict
 {
+    /** @var Db $Db */
     protected $Db;
     protected $Error;
 
@@ -16,5 +19,3 @@ abstract class Model extends Strict
         return $this->Error;
     }
 }
-
-;
