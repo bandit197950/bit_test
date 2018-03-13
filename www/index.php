@@ -1,25 +1,35 @@
 <?php
-    session_start();
-    try {
-        require_once "conf/startup.php";
-        require_once "MySQLDb.php";
 
-        $db = new MySQLDb($conf['db_host'], $conf['db_login'], $conf['db_pwd'], $conf['db_name']);
-        $db->Connect();
-        Main::SetDB($db);
+namespace bit_test;
 
-        $router = new Router();
-        $router->SetControllersPath("controller");
+include_once("conf\utils.php");
 
-        if(isset($_SESSION['id']) || $_GET['route'] == 'login') {
-            $router->LoadController($_GET['route']);
-        }
-        else {
-            Controller::ChangeLocation('login');
-        }
-    }
-    catch(Exception $e) {
-        include "lib/error.php";
+use bit_test\www\conf\Utils;
+use bit_test\www\classes\Controller;
+use bit_test\www\classes\Main;
+use bit_test\www\classes\Router;
+use bit_test\www\conf\Config;
+use bit_test\www\lib\MySQLDb;
+
+session_start();
+session_write_close();
+
+try {
+    Utils::Startup();
+
+    $db = new MySQLDb(Config::db_host(), Config::db_login(), Config::db_pwd(), Config::db_name());
+    $db->Connect();
+    Main::SetDB($db);
+
+    $router = new Router();
+    $router->SetControllersPath("controller");
+
+    if (isset($_SESSION['id']) || $_GET['route'] == 'login') {
+        $router->LoadController($_GET['route']);
         session_write_close();
-        ShowException($e);
+    } else {
+        Controller::ChangeLocation('login');
     }
+} catch (\Exception $e) {
+    Utils::ShowException($e);
+}

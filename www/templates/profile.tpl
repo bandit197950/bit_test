@@ -40,12 +40,14 @@
 	<h4>Balance history</h4>
 	<table border="1">
 		<tr>
+			<th>Operation time</th>
 			<th>Balance before</th>
 			<th>Writed off amount</th>
 			<th>Balance after</th>
 		</tr>
         <?php foreach($balance_history as $balance_item) { ?>
         <tr>
+			<td><?php echo $balance_item['created_at'] ?></td>
             <td><?php echo $balance_item['balance_before']; ?></td>
             <td>-<?php echo $balance_item['write_off_amount']; ?></td>
             <td><?php echo round(floatval($balance_item['balance_before'] - $balance_item['write_off_amount']), 2); ?></td>

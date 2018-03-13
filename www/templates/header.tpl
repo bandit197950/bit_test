@@ -3,7 +3,7 @@
 <html>
 <head lang="ru">
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-	<link type="text/css" rel="stylesheet" href="<?php echo Controller::GetLocation('templates/css/default.css'); ?>" />
+	<link type="text/css" rel="stylesheet" href="<?php echo bit_test\www\classes\Controller::GetLocation('templates/css/default.css'); ?>" />
 	<title><?php echo $title; ?></title>
 </head>
 <body>

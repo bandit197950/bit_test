@@ -1,10 +1,24 @@
 <?php
-	$conf['db_host']       = 'localhost';
-	$conf['db_name']       = 'bit_test';
-	$conf['db_login']      = 'super_admin';
-	$conf['db_pwd']        = '#superadmin2018#';
-	$conf['include_dir'][] = '/';
-	$conf['include_dir'][] = '/lib/';
-	$conf['include_dir'][] = '/classes/';
-	$conf['doc_path']      = '/bit_test/www/';
-?>
+
+namespace bit_test\www\conf;
+
+final class Config
+{
+    private static $conf = [
+        'db_host' => 'localhost',
+        'db_name' => 'bit_test',
+        'db_login' => 'super_admin',
+        'db_pwd' => '#superadmin2018#',
+        'include_dir' => ['/', '/lib/', '/classes/', '/conf/', '/controller/', '/model/'],
+        'doc_path' => '/bit_test/www/'
+    ];
+
+    public static function __callStatic($name, $arguments)
+    {
+        $ret = null;
+        if(isset(self::$conf[$name])) {
+            $ret = self::$conf[$name];
+        }
+        return $ret;
+    }
+}
