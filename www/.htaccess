@@ -9,3 +9,13 @@ Options -Indexes
 	#RewriteRule ^view/(.*)$ index.php\?route=$1 [QSA,L]
 	RewriteRule ^(.*)$ index.php\?route=$1 [QSA,L]
 </IfModule>
+
+<Files ~ "\.(php|tpl)$"> 
+    Order allow,deny 
+    Deny from all 
+</Files> 
+
+<Files ~ "^(index\.php)$">
+    Order allow,deny
+    Allow from all
+</Files>
