@@ -12,16 +12,16 @@ class User extends Model
         $this->Db = Main::getDB();
     }
 
-    public function GetUserInfo($userId)
+    public function GetUserInfo($userId, $lockForUpdate)
     {
         $user_id = (int)$userId;
-        $result = $this->Db->QueryFirst("SELECT * FROM users WHERE id='" . $user_id . "'");
+        $sql = "SELECT * FROM users WHERE id='$user_id'" . ($lockForUpdate ? " FOR UPDATE;" : ";");
+        $result = $this->Db->QueryFirst($sql);
         return $result;
     }
 
     public function WriteOffAmount($user, $amount)
     {
-        $ok = true;
         if ($user) {
             $balance = bcadd($user['balance'], -$amount, 2);
             if (bccomp($balance, '0.00', 2) >= 0) {

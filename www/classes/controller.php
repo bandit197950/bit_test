@@ -12,7 +12,7 @@ abstract class Controller extends Strict
 
     private static function Load($path, $name, $prefix)
     {
-        $full_class_name = '\\bit_test\\www\\' . $path . '\\' . $prefix . $name;
+        $full_class_name = Config::class_path() . $path . '\\' . $prefix . $name;
         return new $full_class_name;
     }
 

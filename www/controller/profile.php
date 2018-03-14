@@ -22,17 +22,9 @@ class Profile extends Controller
         $user_model = Controller::LoadModel("User");
         $history_model = Controller::LoadModel("BalanceHistory");
 
-        $db = Main::GetDB();
-        $user_info = [];
-        $balance_history = [];
-        try {
-            $db->BeginTransaction();
-            $user_info = $user_model->GetUserInfo($user_id);
-            $balance_history = $history_model->GetHistory($user_id);
-            $db->CommitTransaction();
-        } catch (\Exception $e) {
-            $db->RollbackTransaction();
-        }
+        $user_info = $user_model->GetUserInfo($user_id, false);
+        $balance_history = $history_model->GetHistory($user_id);
+
         $header_view = new View("header");
         $profile_view = new View("profile");
         $footer_view = new View("footer");
@@ -72,9 +64,9 @@ class Profile extends Controller
             try {
                 $wr_off_amt = round(floatval($_POST['write_off_amount']), 2);
                 $db->BeginTransaction();
-                $user_info = $user_model->GetUserInfo($user_id);
+                $user_info = $user_model->GetUserInfo($user_id, true);
                 if (!$user_info) {
-                    throw new \Exception($user_model->GetLastError());
+                    throw new \Exception("User not found: " . $user_model->GetLastError());
                 }
                 $this->Validate($user_info['balance'], $wr_off_amt);
                 if (empty($this->Error)) {

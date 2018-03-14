@@ -26,7 +26,6 @@ try {
 
     if (isset($_SESSION['id']) || $_GET['route'] == 'login') {
         $router->LoadController($_GET['route']);
-        session_write_close();
     } else {
         Controller::ChangeLocation('login');
     }

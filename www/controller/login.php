@@ -10,8 +10,8 @@ class Login extends Controller
     public function Logout()
     {
         session_start();
-        $_SESSION['logout'] = true;
         unset($_SESSION['id']);
+        $this->RegenerateSessionId();
         session_write_close();
         self::ChangeLocation('login');
     }
@@ -19,13 +19,9 @@ class Login extends Controller
     public function Index()
     {
         session_start();
+        session_write_close();
 
-        if (isset($_SESSION['logout'])) {
-            unset($_SESSION['logout']);
-            $this->RegenerateSessionId();
-            session_write_close();
-        } elseif (isset($_SESSION['id'])) {
-            session_write_close();
+        if (isset($_SESSION['id'])) {
             self::ChangeLocation('profile');
         }
 
@@ -87,8 +83,6 @@ class Login extends Controller
     //
     private function RegenerateSessionId()
     {
-        $_SESSION['destroyed'] = time();
         session_regenerate_id();
-        unset($_SESSION['destroyed']);
     }
 }

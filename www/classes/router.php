@@ -2,6 +2,8 @@
 
 namespace bit_test\www\classes;
 
+use bit_test\www\conf\Config;
+
 class Router extends Strict
 {
     private $DefaultController;
@@ -21,9 +23,9 @@ class Router extends Strict
         $this->DefaultController = $controller;
     }
 
-    public function LoadController($route_string)
+    public function LoadController($routeString)
     {
-        $route_string = trim($route_string, '/');
+        $route_string = trim($routeString, '/');
         $path_parts = explode("/", $route_string);
 
         $controller_info['path'] = $this->ControllersPath;
@@ -48,8 +50,8 @@ class Router extends Strict
             }
             die('no such controller');
         }
-
-        $controller_class = '\\bit_test\\www\\controller\\' . $controller_info['name'];
+        $controller_path = rtrim(str_replace('/', '\\', $controller_info['path']), '\\') . '\\';
+        $controller_class = Config::class_path() . $controller_path . $controller_info['name'];
         $controller = new $controller_class;
 
         if (method_exists($controller, $controller_info['function'])) {
@@ -66,5 +68,3 @@ class Router extends Strict
 
     }
 }
-
-;

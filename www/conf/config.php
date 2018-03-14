@@ -9,6 +9,7 @@ namespace bit_test\www\conf;
  * @method static Config db_pwd()
  * @method static Config include_dir()
  * @method static Config doc_path()
+ * @method static Config class_path()
  */
 final class Config
 {
@@ -18,7 +19,8 @@ final class Config
         'db_login' => 'super_admin',
         'db_pwd' => '#superadmin2018#',
         'include_dir' => ['/', '/lib/', '/classes/', '/conf/', '/controller/', '/model/'],
-        'doc_path' => '/bit_test/www/'
+        'doc_path' => '/bit_test/www/',
+        'class_path' => '\\bit_test\\www\\'
     ];
 
     public static function __callStatic($name, $arguments)
